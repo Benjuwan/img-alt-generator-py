@@ -1,4 +1,4 @@
-# Python関連
+# Python 関連
 __pycache__/
 *.py[cod]
 *$py.class
@@ -10,11 +10,11 @@ env/
 .venv/
 .env
 
-# IDE関連
+# IDE 関連
 .vscode/
 .idea/
 *.swp
 
-# OS関連
+# OS 関連
 .DS_Store
 Thumbs.db

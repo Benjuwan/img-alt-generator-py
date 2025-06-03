@@ -1,12 +1,15 @@
-import google.generativeai as genai
-from urllib.parse import urljoin
-import requests
-from PIL import Image
-from io import BytesIO
+import google.generativeai as genai     # Google Gemini API用ライブラリ
+from urllib.parse import urljoin        # URLの結合・正規化
+import requests                         # Webページからコンテンツ（情報）を取得
+from PIL import Image                   # 画像処理用ライブラリ（Pillow）
+from io import BytesIO                  # バイナリデータをファイルのように扱う
+from dotenv import load_dotenv          # .envファイルから環境変数を読み込む
+import os                               # OSの環境変数操作用
 
 
 # Gemini APIの設定
-GOOGLE_API_KEY = 'Your Gemini API-KEY'
+load_dotenv() # ローカルの .env ファイルから環境変数（秘匿情報など）を読み込んで、os.environ で参照できるようにする関数
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 

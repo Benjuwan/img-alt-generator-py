@@ -1,5 +1,13 @@
 # img-alt-generator-py
+
+## 概要
 指定したページの全画像データにおける`alt`タグの記述漏れをチェックします。<br>`alt`指定漏れの画像をPythonライブラリ（`pillow`）で生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`タグを自動生成してもらう機能です。
+
+### ルートに`.env`ファイルを用意
+- `.env`
+```bash
+GOOGLE_API_KEY="発行した Geminiの APIキーを記述"
+```
 
 ## 技術構成
 ```bash
@@ -29,6 +37,7 @@ pyasn1_modules               0.4.2
 pydantic                     2.11.5
 pydantic_core                2.33.2
 pyparsing                    3.2.3
+python-dotenv                1.1.0
 requests                     2.32.3
 rsa                          4.9.1
 soupsieve                    2.7
@@ -43,6 +52,12 @@ urllib3                      2.4.0
 Googleの公式Generative AIライブラリ
 ```bash
 pip install google-generativeai
+```
+
+- `python-dotenv`<br>
+秘匿情報ファイルを扱うための非標準ライブラリ
+```bash
+pip install python-dotenv
 ```
 
 ## `JavaScript`での`alt`タグ記述漏れチェックコード
@@ -60,4 +75,3 @@ const allImg = document.querySelectorAll('img');
 noAltImgs = Array.from(allImg).filter(img => img.alt.length === 0);
 console.log(noAltImgs);
 ```
-"# img-alt-generator-py" 
