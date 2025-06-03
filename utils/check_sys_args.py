@@ -1,4 +1,4 @@
-import sys
+import sys # コマンドライン引数を扱う
 
 
 # URLパスをチェックするプライベートメソッド

@@ -1,8 +1,10 @@
-import requests
-from bs4 import BeautifulSoup 
+import requests               # 指定したWebページからコンテンツ（情報）を取得
+from bs4 import BeautifulSoup # 取得したwebページの各コンテンツをHTML解析
 
-from check_sys_args import check_sys_args # 独自モジュール（コマンドライン引数をチェック）
-from create_alt_txt_byGemini import create_alt_txt_byGemini # 独自モジュール（Gemini による画像チェック及び alt テキストの生成）
+# 独自モジュール（コマンドライン引数をチェック）
+from check_sys_args import check_sys_args
+# 独自モジュール（Gemini による画像チェック及び alt テキストの生成）
+from create_alt_txt_byGemini import create_alt_txt_byGemini
 
 target_site = check_sys_args()
 
