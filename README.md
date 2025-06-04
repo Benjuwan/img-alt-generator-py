@@ -3,10 +3,65 @@
 ## 概要
 指定したページの全画像データにおける`alt`タグの記述漏れをチェックします。<br>`alt`指定漏れの画像をPythonライブラリ（`pillow`）で生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`タグを自動生成してもらう機能です。
 
+## 使い方
+1. ルートに`.env`ファイルを用意
+2. 仮想環境を構築（初回のみ）または仮想環境を立ち上げる（初回以降）
+    - 仮想環境をアクティベートすると以下のようなコマンド画面になります
+```bash
+# WindowsOS の場合
+(仮想環境名) C:\~~~~\img-alt-generator-py\仮想環境ディレクトリ名>
+```
+3. `utils`ディレクトリへ移動して`check_img_alt.py`を実行
+
+> [!NOTE]
+> 本機能はWebスクレイピングします<br>
+> 必ず自身が管理するサイトや関係するサイトでのみ行ってください<br>
+> webスクレイピングは犯罪に該当するかもしれない迷惑行為なので対象サイト／ページは慎重に選んでください
+
 ### ルートに`.env`ファイルを用意
 - `.env`
 ```bash
 GOOGLE_API_KEY="発行した Geminiの APIキーを記述"
+```
+
+### 仮想環境を構築（初回のみ）
+ターミナル／コマンドプロンプトを開いてルート（ファイルの最上階層）にいる状態で以下フローを実行
+```bash
+mkdir venv # venv ディレクトリ（仮想環境ディレクトリ）を作成
+cd venv    # 作成した仮想環境ディレクトリ（`venv`）へ移動
+
+# 新しい仮想環境を作成してアクティベート
+python -m venv env        # env{は仮想環境名}
+
+# WindowsOS の場合: env\Scripts\activate
+source env/bin/activate
+
+# 3. 仮想環境をアクティベートした状態で、パス指定して`requirements.txt`から各種ライブラリをインストール
+python -m pip install -r ../requirements.txt # `../requirements.txt`なのは`requirements.txt`がルート直下にあるため
+```
+
+### 仮想環境を立ち上げる（初回以降）
+```bash
+# 1. 仮想環境を格納しているディレクトリへ移動（存在しない場合は上記を参照に新規作成）
+cd venv
+
+# 2. 仮想環境をアクティベート
+# WindowsOS の場合: env\Scripts\activate
+source env/bin/activate
+```
+
+### `utils`ディレクトリへ移動して`check_img_alt.py`を実行
+必ず**仮想環境をアクティベートした状態**で以下フローを実行
+```bash
+# ※必要に応じて以下コマンドを実行
+# 仮想環境をアクティベートした直後だと`venv`ディレクトリへいるためルートに移動する
+# cd ../
+
+# `utils`ディレクトリへ移動
+cd utils
+
+# 解析したいWebページURLを`コマンドライン引数`に指定してファイルを実行
+python check_img_alt.py https://example.com/archive/items/index.html
 ```
 
 ## 技術構成
@@ -17,6 +72,7 @@ cachetools                   5.5.2
 certifi                      2025.4.26
 charset-normalizer           3.4.2
 colorama                     0.4.6
+et_xmlfile                   2.0.0
 google-ai-generativelanguage 0.6.15
 google-api-core              2.25.0
 google-api-python-client     2.170.0
@@ -28,6 +84,7 @@ grpcio                       1.72.1
 grpcio-status                1.71.0
 httplib2                     0.22.0
 idna                         3.10
+openpyxl                     3.1.5
 pillow                       11.2.1
 pip                          25.1.1
 proto-plus                   1.26.1
