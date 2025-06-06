@@ -1,6 +1,9 @@
 import os
 import openpyxl
 
+# Excelのセルの配置やテキストの表示方法を制御するために使用する Alignment クラスをインポート
+from openpyxl.styles import Alignment
+
 
 # 1. はじめに、モジュールの主要な処理を関数にまとめる
 def create_xlsx_file(results=None):
@@ -18,12 +21,27 @@ def create_xlsx_file(results=None):
     # 操作対象ブック（オブジェクト）をアクティブにすることでセルの編集が行える
     img_lists_worksheet = img_lists_workbook.active
 
+    if img_lists_worksheet is None:
+        return
+
     # 読み込み：ワークシート[セル位置].value
     img_lists_worksheet["A1"] = "画像要素（img タグ）"
     img_lists_worksheet["B1"] = "Gemini が生成した alt文"
 
+    # 幅を調整（列名での指定）
+    img_lists_worksheet.column_dimensions["A"].width = 75
+    img_lists_worksheet.column_dimensions["B"].width = 100
+
     if results is not None:
         for i, result in enumerate(results, 2):
+            # 行の高さ設定（行単位での指定）
+            # 15が標準の1行分（デフォルト）なので 30は約2行分
+            img_lists_worksheet.row_dimensions[i].height = 30
+
+            # 折り返しの設定
+            img_lists_worksheet[f"A{i}"].alignment = Alignment(wrap_text=True)
+            img_lists_worksheet[f"B{i}"].alignment = Alignment(wrap_text=True)
+
             # 書き込み：ワークシート[セル位置] = 値
             img_lists_worksheet[f"A{i}"] = str(result["original_img"])
             img_lists_worksheet[f"B{i}"] = str(result["suggested_alt"])
