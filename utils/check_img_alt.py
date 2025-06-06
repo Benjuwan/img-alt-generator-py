@@ -22,12 +22,15 @@ soup = BeautifulSoup(res.text, "html.parser")
 
 # check_img_alt： 指定したWebページ内における alt属性が指定されていない画像に適切な altテキストを生成する関数
 def check_img_alt():
-    # 指定したwebページ内の img 要素の alt属性をチェック
     images = []
+
     for imgs in soup.find_all("img"):
-        # .get()： 引数に指定した属性名の有無を取得（無い場合はNone）
-        is_has_alt = len(imgs.get("alt")) == 0
-        if is_has_alt is False:
+        # 指定したwebページ内の img 要素の alt属性をチェック
+        # .get()：引数に指定した属性名の有無を取得（無い場合はNone）
+        img_alt = imgs.get("alt")
+
+        # 対象画像が alt属性を持っていて、1文字以上指定されている場合は処理スキップ
+        if img_alt is not None and len(img_alt) > 0:
             continue
 
         images.append(imgs)

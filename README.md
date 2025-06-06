@@ -1,7 +1,9 @@
 # img-alt-generator-py
 
 ## 概要
-指定したページの全画像データにおける`alt`タグの記述漏れをチェックします。<br>`alt`指定漏れの画像をPythonライブラリ（`pillow`）で生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`タグを自動生成してもらう機能です。
+指定したページ内の全画像データの`alt`タグ記述漏れをチェックします。<br>
+`alt`指定漏れの画像をPythonライブラリ（`pillow`）で生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`タグを自動生成してもらう機能です。<br>
+最終結果として「当該画像HTMLタグ文字列」と「AIが生成した`alt`文」をまとめたエクセルファイル（`openpyxl`ライブラリ使用）を出力します。
 
 ## 使い方
 1. ルートに`.env`ファイルを用意
@@ -10,6 +12,9 @@
 ```bash
 # WindowsOS の場合
 (仮想環境名) C:\~~~~\img-alt-generator-py\仮想環境ディレクトリ名>
+
+# MacOS の場合
+(仮想環境名) user-PC-name 仮想環境ディレクトリ名
 ```
 3. `utils`ディレクトリへ移動して`check_img_alt.py`を実行
 
@@ -31,13 +36,14 @@ mkdir venv # venv ディレクトリ（仮想環境ディレクトリ）を作�
 cd venv    # 作成した仮想環境ディレクトリ（`venv`）へ移動
 
 # 新しい仮想環境を作成してアクティベート
-python -m venv env        # env{は仮想環境名}
+# WindowsOS の場合: python -m venv env
+python3 -m venv env # env{は仮想環境名}
 
 # WindowsOS の場合: env\Scripts\activate
 source env/bin/activate
 
 # 3. 仮想環境をアクティベートした状態で、パス指定して`requirements.txt`から各種ライブラリをインストール
-python -m pip install -r ../requirements.txt # `../requirements.txt`なのは`requirements.txt`がルート直下にあるため
+pip install -r ../requirements.txt # `../requirements.txt`なのは`requirements.txt`がルート直下にあるため
 ```
 
 ### 仮想環境を立ち上げる（初回以降）
@@ -61,7 +67,10 @@ source env/bin/activate
 cd utils
 
 # 解析したいWebページURLを`コマンドライン引数`に指定してファイルを実行
-python check_img_alt.py https://example.com/archive/items/index.html
+# WindowsOS の場合:
+# python check_img_alt.py https://example.com/archive/items/index.html
+
+python3 check_img_alt.py https://example.com/archive/items/index.html
 ```
 
 ## 技術構成
