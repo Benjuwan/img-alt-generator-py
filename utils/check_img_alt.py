@@ -38,7 +38,7 @@ def check_img_alt():
     if len(images) > 0:
         results = create_alt_txt_byGemini(images, target_site)
         create_xlsx_file(results=results)
-        print("無事に処理が完了しました")
+        print("すべての処理が完了しました")
 
     else:
         print(f"{target_site}内の画像データの alt属性は全て記入されています")
