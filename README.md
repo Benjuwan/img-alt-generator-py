@@ -1,9 +1,9 @@
 # img-alt-generator-py
 
 ## 概要
-指定したページ内の全画像データの`alt`タグ記述漏れをチェックします。<br>
-`alt`指定漏れの画像を`pillow`ライブラリで生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`タグを自動生成してもらう機能です。<br>
-最終結果として`openpyxl`ライブラリで「当該画像HTMLタグ文字列」と「AIが生成した`alt`文」をまとめたエクセルファイルを出力します。
+指定したページ内の全画像データの`alt`記述漏れをチェックします。<br>
+`alt`指定漏れの画像を`pillow`ライブラリで生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`文を自動生成してもらう機能です。<br>
+最終結果として`openpyxl`ライブラリで「当該DOM要素（`img`）の文字列」と「AIが生成した`alt`文」をまとめたエクセルファイルを出力します。
 
 ## 使い方
 1. ルートに`.env`ファイルを用意
@@ -126,7 +126,7 @@ pip install google-generativeai
 pip install python-dotenv
 ```
 
-## `JavaScript`での`alt`タグ記述漏れチェックコード
+## `JavaScript`での`alt`記述漏れチェックコード
 
 ```js
 const allImg = document.querySelectorAll('img');
