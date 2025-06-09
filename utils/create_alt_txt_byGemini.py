@@ -1,5 +1,7 @@
 import google.generativeai as genai  # Google Gemini API用ライブラリ
 from urllib.parse import urljoin  # URLの結合・正規化
+from urllib.parse import urlparse  # URLの解析
+from tqdm import tqdm  # プログレスバーを表示するための非標準ライブラリ
 import requests  # Webページからコンテンツ（情報）を取得
 from PIL import Image  # 画像処理用ライブラリ（Pillow）
 from io import BytesIO  # バイナリデータをファイルのように扱う
@@ -19,8 +21,14 @@ model = genai.GenerativeModel("gemini-1.5-flash")  # 処理速度を重視する
 def _request_Gemini(img: str, img_url: str, results: list):
     response = requests.get(img_url)
 
+    # レスポンス判定
     if response.status_code != 200:
         print(f"レスポンスエラー：status-[{response.status_code}]\n{img}")
+        return
+
+    # 画像形式の検証
+    if not response.headers.get("content-type", "").startswith("image/"):
+        print(f"画像ファイルではありません: {img_url}")
         return
 
     # レスポンス内容をバイナリデータ化して画像データとして出力（開く）
@@ -55,21 +63,19 @@ def create_alt_txt_byGemini(
     if img_list is None or target_site is None:
         return
 
-    for img in img_list:
+    for img in tqdm(img_list, desc="画像を処理中"):
         try:
             # 画像URLを取得して正規化
             img_url: str = img.get("src")
 
             if img_url is None:
-                return
+                continue
 
-            # 相対パス判定フラグ
-            is_not_absolute_pass = img_url.count("../") > 0
-            # 文字列が"/"開始かどうかの判定フラグ
-            is_not_startWith_scheme = img_url.startswith("/") is False
-
-            if is_not_absolute_pass or is_not_startWith_scheme:
-                # urljoinを使用して相対パス（'../'）を解決
+            # URLスキーム（http:// や https:// など）の有無をチェック
+            # `urlparse(img_url).scheme`はスキーム（プロトコル）がある場合はそのスキーム名を、無い場合は空文字を返す
+            if not urlparse(img_url).scheme:
+                # スキームが無い（適切なURL記述でない）場合は空文字が返ってくるので`img_url`は相対パスとなり、
+                # それを`urljoin`で`target_site`を基準とした絶対パスに変換する
                 img_url = urljoin(target_site, img_url)
                 # print(f"true : {img_url}")  # デバック用
 
