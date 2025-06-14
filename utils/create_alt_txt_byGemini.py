@@ -13,8 +13,7 @@ import os  # OSの環境変数操作用
 load_dotenv()  # ローカルの .env ファイルから環境変数（秘匿情報など）を読み込んで、os.environ で参照できるようにする関数
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
-# model = genai.GenerativeModel("gemini-1.5-pro")  # より詳細な画像認識を重視する場合
-model = genai.GenerativeModel("gemini-1.5-flash")  # 処理速度を重視する場合
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 
 # Gemini への処理要求
