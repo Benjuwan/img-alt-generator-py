@@ -1,7 +1,7 @@
 # img-alt-generator-py
 
 ## 概要
-指定したページ内の全画像データの`alt`記述漏れをチェックします。<br>
+コマンドライン引数に指定したページ内の全画像データの`alt`記述漏れをチェックします。<br>
 `alt`指定漏れの画像を`pillow`ライブラリで生成して、それらをLLM（`Gemini`）に読み込ませて適切な`alt`文を自動生成してもらう機能です。<br>
 最終結果として`openpyxl`ライブラリで「当該DOM要素（`img`）の文字列」と「AIが生成した`alt`文」をまとめたエクセルファイルを出力します。
 
@@ -42,8 +42,9 @@ python3 -m venv env # env{は仮想環境名}
 # WindowsOS の場合: env\Scripts\activate
 source env/bin/activate
 
-# 3. 仮想環境をアクティベートした状態で、パス指定して`requirements.txt`から各種ライブラリをインストール
-pip install -r ../requirements.txt # `../requirements.txt`なのは`requirements.txt`がルート直下にあるため
+# 仮想環境をアクティベートした状態で、パス指定して`requirements.txt`から各種ライブラリをインストール
+# `../requirements.txt`なのは`requirements.txt`がルート直下にあるため
+pip install -r ../requirements.txt 
 ```
 
 ### 仮想環境を立ち上げる（初回以降）
@@ -69,7 +70,6 @@ cd utils
 # 解析したいWebページURLを`コマンドライン引数`に指定してファイルを実行
 # WindowsOS の場合:
 # python check_img_alt.py https://example.com/archive/items/index.html
-
 python3 check_img_alt.py https://example.com/archive/items/index.html
 ```
 
@@ -119,6 +119,9 @@ Googleの公式Generative AIライブラリ
 ```bash
 pip install google-generativeai
 ```
+
+- [Gemini各モデルについて](https://ai.google.dev/gemini-api/docs/models?hl=ja&_gl=1*cf3ayb*_up*MQ..*_ga*MTAzMDk0MDk5OC4xNzQ5NTEyODU2*_ga_P1DBVKWT6V*czE3NDk1MTI4NTUkbzEkZzAkdDE3NDk1MTI5NTYkajYwJGwwJGg3MDY1NjM3MTE.)
+- [レート制限について](https://ai.google.dev/gemini-api/docs/rate-limits?hl=ja&_gl=1*139atk2*_up*MQ..*_ga*MTAzMDk0MDk5OC4xNzQ5NTEyODU2*_ga_P1DBVKWT6V*czE3NDk1MTI4NTUkbzEkZzAkdDE3NDk1MTI4NTUkajYwJGwwJGg3MDY1NjM3MTE.#free-tier)
 
 - `python-dotenv`<br>
 秘匿情報ファイルを扱うための非標準ライブラリ
