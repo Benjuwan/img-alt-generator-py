@@ -47,7 +47,8 @@ def _request_Gemini(img: str, img_url: str, results: list):
         ]
     )
 
-    suggested_alt = response.text
+    # strip() で文字列・文章前後の空白をトリミングし、改行を。に置換する
+    suggested_alt = response.text.strip().replace("\n", "。")
     # dict 形式でリストに格納
     results.append({"original_img": img, "suggested_alt": suggested_alt})
 
