@@ -16,7 +16,7 @@
 # MacOS の場合
 (仮想環境名) user-PC-name 仮想環境ディレクトリ名
 ```
-3. `utils`ディレクトリへ移動して`check_img_alt.py`を実行
+3. `utils`ディレクトリへ移動して`main.py`を実行
 
 > [!NOTE]
 > 本機能はWebスクレイピングします<br>
@@ -57,7 +57,7 @@ cd venv
 source env/bin/activate
 ```
 
-### `utils`ディレクトリへ移動して`check_img_alt.py`を実行
+### `utils`ディレクトリへ移動して`main.py`を実行
 必ず**仮想環境をアクティベートした状態**で以下フローを実行
 ```bash
 # ※必要に応じて以下コマンドを実行
@@ -69,8 +69,8 @@ cd utils
 
 # 解析したいWebページURLを`コマンドライン引数`に指定してファイルを実行
 # WindowsOS の場合:
-# python check_img_alt.py https://example.com/archive/items/index.html
-python3 check_img_alt.py https://example.com/archive/items/index.html
+# python main.py https://example.com/archive/items/index.html
+python3 main.py https://example.com/archive/items/index.html
 ```
 
 ## 技術構成
