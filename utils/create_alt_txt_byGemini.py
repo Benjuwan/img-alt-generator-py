@@ -13,44 +13,49 @@ import os  # OSの環境変数操作用
 load_dotenv()  # ローカルの .env ファイルから環境変数（秘匿情報など）を読み込んで、os.environ で参照できるようにする関数
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel("gemini-2.0-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 
 # Gemini への処理要求
-def _request_Gemini(img: str, img_url: str, results: list):
-    response = requests.get(img_url)
+def _request_Gemini(img: str, img_url: str, results: list[dict]) -> None:
+    try:
+        response = requests.get(img_url)
 
-    # レスポンス判定
-    if response.status_code != 200:
-        print(f"レスポンスエラー：status-[{response.status_code}]\n{img}")
+        # レスポンス判定
+        if response.status_code != 200:
+            print(f"レスポンスエラー：status-[{response.status_code}]\n{img}")
+            return
+
+        # 画像形式の検証
+        if not response.headers.get("content-type", "").startswith("image/"):
+            print(f"画像ファイルではありません: {img_url}")
+            return
+
+        # レスポンス内容をバイナリデータ化して画像データとして出力（開く）
+        image = Image.open(BytesIO(response.content))
+
+        # Geminiに画像を解析してもらう
+        response = model.generate_content(
+            [
+                """
+                ## タスク
+                あなたはSEOの知見が豊富なエージェントです。この画像の内容を alt属性として最適な文章となるよう日本語で生成してください
+
+                ## 条件
+                装飾系やパターン、テクスチャなどデザイン要素としての画像である場合は空文字（""）を返してください
+                """,
+                image,
+            ]
+        )
+
+        # strip() で文字列・文章前後の空白をトリミングし、改行を。に置換する
+        suggested_alt = response.text.strip().replace("\n", "。")
+        # dict 形式でリストに格納
+        results.append({"original_img": img, "suggested_alt": suggested_alt})
+
+    except Exception as e:
+        print(f"Gemini の解析時にエラーが発生 | _request_Gemini : {e}")
         return
-
-    # 画像形式の検証
-    if not response.headers.get("content-type", "").startswith("image/"):
-        print(f"画像ファイルではありません: {img_url}")
-        return
-
-    # レスポンス内容をバイナリデータ化して画像データとして出力（開く）
-    image = Image.open(BytesIO(response.content))
-
-    # Geminiに画像を解析してもらう
-    response = model.generate_content(
-        [
-            """
-            ## タスク
-            あなたはSEOの知見が豊富なエージェントです。この画像の内容を alt属性として最適な文章となるよう日本語で生成してください
-
-            ## 条件
-            装飾系やパターン、テクスチャなどデザイン要素としての画像である場合は空文字（""）を返してください
-            """,
-            image,
-        ]
-    )
-
-    # strip() で文字列・文章前後の空白をトリミングし、改行を。に置換する
-    suggested_alt = response.text.strip().replace("\n", "。")
-    # dict 形式でリストに格納
-    results.append({"original_img": img, "suggested_alt": suggested_alt})
 
 
 # 1. はじめに、モジュールの主要な処理を関数にまとめる
@@ -58,7 +63,7 @@ def _request_Gemini(img: str, img_url: str, results: list):
 def create_alt_txt_byGemini(
     img_list: list | None = None, target_site: str | None = None
 ):
-    results: list[str] = []
+    results: list[dict] = []
 
     if img_list is None or target_site is None:
         return
@@ -77,16 +82,13 @@ def create_alt_txt_byGemini(
                 # スキームが無い（適切なURL記述でない）場合は空文字が返ってくるので`img_url`は相対パスとなり、
                 # それを`urljoin`で`target_site`を基準とした絶対パスに変換する
                 img_url = urljoin(target_site, img_url)
-                # print(f"true : {img_url}")  # デバック用
-
-            # print(f"false: {img_url}")  # デバック用
 
             # Gemini への処理要求
             _request_Gemini(img, img_url, results)
 
         # Exception：大部分の例外の基底クラス
         except Exception as e:
-            print(f"エラーが発生しました | create_alt_txt_byGemini.py : {e}")
+            print(f"{img} 画像を処理中にエラーが発生 | create_alt_txt_byGemini : {e}")
             continue
 
     return results
